@@ -25,3 +25,6 @@
 [submodule "source/uprintf"]
 	path = source/uprintf
 	url = https://github.com/bdmihai/stm32-uprintf
+[submodule "source/rencoder"]
+	path = source/rencoder
+	url = https://github.com/bdmihai/stm32-rencoder
