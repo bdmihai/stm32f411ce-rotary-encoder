@@ -14,7 +14,9 @@
         "stm32f4xx.h": "c",
         "cstdint": "cpp",
         "i2c.h": "c",
-        "stm32f4xx_hal.h": "c"
+        "stm32f4xx_hal.h": "c",
+        "compare": "c",
+        "type_traits": "c"
     },
     "Open files list": false,
     "Toggle terminal": false,

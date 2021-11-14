@@ -21,15 +21,11 @@
  | THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                 |
  |____________________________________________________________________________|
  |                                                                            |
- |  Author: Mihai Baneu                           Last modified: 21.Jan.2021  |
+ |  Author: Mihai Baneu                           Last modified: 14.Nov.2021  |
  |                                                                            |
  |___________________________________________________________________________*/
  
 #pragma once
-
-typedef struct gpio_event_t {
-    uint16_t gpio_idr;
-} gpio_event_t;
 
 /* initialization */
 void gpio_init();
@@ -38,7 +34,9 @@ void gpio_init();
 void gpio_set_blue_led();
 void gpio_reset_blue_led();
 void gpio_toggle_blue_led();
-void gpio_handle_trigger();
+
+void gpio_handle_rotation();
+void gpio_handle_key();
 
 void gpio_config_control_out();
 void gpio_config_data_out();

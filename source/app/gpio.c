@@ -21,7 +21,7 @@
  | THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                 |
  |____________________________________________________________________________|
  |                                                                            |
- |  Author: Mihai Baneu                           Last modified: 12.Oct.2021  |
+ |  Author: Mihai Baneu                           Last modified: 14.Nov.2021  |
  |                                                                            |
  |___________________________________________________________________________*/
 
@@ -30,8 +30,6 @@
 #include "queue.h"
 #include "gpio.h"
 #include "rencoder.h"
-
-extern QueueHandle_t gpio_queue;
 
 void gpio_init()
 {
@@ -63,19 +61,19 @@ void gpio_init()
     MODIFY_REG(GPIOB->PUPDR, GPIO_PUPDR_PUPD7_Msk, 0);                                                      /* no pull up, no pull down */
 
     /* set the pin as input */
-    MODIFY_REG(GPIOB->MODER, GPIO_MODER_MODER0_Msk, 0);
-    MODIFY_REG(GPIOB->MODER, GPIO_MODER_MODER1_Msk, 0);
-    MODIFY_REG(GPIOB->MODER, GPIO_MODER_MODER2_Msk, 0);
+    MODIFY_REG(GPIOB->MODER, GPIO_MODER_MODER0_Msk,  0);
+    MODIFY_REG(GPIOB->MODER, GPIO_MODER_MODER1_Msk,  0);
+    MODIFY_REG(GPIOB->MODER, GPIO_MODER_MODER10_Msk, 0);
 
     /* no pull up, no pull down */
-    MODIFY_REG(GPIOB->PUPDR, GPIO_PUPDR_PUPD0_Msk, GPIO_PUPDR_PUPD1_1);
-    MODIFY_REG(GPIOB->PUPDR, GPIO_PUPDR_PUPD1_Msk, 0);
-    MODIFY_REG(GPIOB->PUPDR, GPIO_PUPDR_PUPD2_Msk, 0);
+    MODIFY_REG(GPIOB->PUPDR, GPIO_PUPDR_PUPD0_Msk,  0);
+    MODIFY_REG(GPIOB->PUPDR, GPIO_PUPDR_PUPD1_Msk,  0);
+    MODIFY_REG(GPIOB->PUPDR, GPIO_PUPDR_PUPD10_Msk, 0);
 
     /* map gpio to EXTI lines */
-    MODIFY_REG(SYSCFG->EXTICR[0], SYSCFG_EXTICR1_EXTI0, SYSCFG_EXTICR1_EXTI0_PB);
-    MODIFY_REG(SYSCFG->EXTICR[0], SYSCFG_EXTICR1_EXTI1, SYSCFG_EXTICR1_EXTI1_PB);
-    MODIFY_REG(SYSCFG->EXTICR[0], SYSCFG_EXTICR1_EXTI2, SYSCFG_EXTICR1_EXTI2_PB);
+    MODIFY_REG(SYSCFG->EXTICR[0], SYSCFG_EXTICR1_EXTI0,  SYSCFG_EXTICR1_EXTI0_PB);
+    MODIFY_REG(SYSCFG->EXTICR[0], SYSCFG_EXTICR1_EXTI1,  SYSCFG_EXTICR1_EXTI1_PB);
+    MODIFY_REG(SYSCFG->EXTICR[2], SYSCFG_EXTICR3_EXTI10, SYSCFG_EXTICR3_EXTI10_PB);
 }
 
 void gpio_set_blue_led()
@@ -198,9 +196,18 @@ void gpio_config_control_out()
     MODIFY_REG(GPIOB->PUPDR, GPIO_PUPDR_PUPD9_Msk, 0);
 }
 
-void gpio_handle_trigger()
+void gpio_handle_rotation()
 {
   rencoder_input_event_t event;
-  event.gpio_idr = GPIOB->IDR & 0x03;
+  event.type = rencoder_input_rotation;
+  event.gpio = GPIOB->IDR & 0x03;
+  xQueueSendToBackFromISR(rencoder_input_queue, &event, (TickType_t) 0);
+}
+
+void gpio_handle_key()
+{
+  rencoder_input_event_t event;
+  event.type = rencoder_input_key;
+  event.gpio = (GPIOB->IDR & GPIO_IDR_ID10_Msk) ? 1 : 0;
   xQueueSendToBackFromISR(rencoder_input_queue, &event, (TickType_t) 0);
 }

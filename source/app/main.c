@@ -21,7 +21,7 @@
  | THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                 |
  |____________________________________________________________________________|
  |                                                                            |
- |  Author: Mihai Baneu                           Last modified: 21.Jan.2021  |
+ |  Author: Mihai Baneu                           Last modified: 14.Nov.2021  |
  |                                                                            |
  |___________________________________________________________________________*/
 
@@ -139,7 +139,12 @@ static void vTaskDisplay(void *pvParameters)
     for (;;) {
         rencoder_output_event_t event;
         if (xQueueReceive(rencoder_output_queue, &event, portMAX_DELAY) == pdPASS) {
-            updateDisplay(event.position * 16);
+            if (event.type == rencoder_output_rotation) {
+                updateDisplay(event.position * 16);
+            } else if ((event.type == rencoder_output_key) && (event.key == RENCODER_KEY_RELEASED)) {
+                rencoder_reset();
+                updateDisplay(0);
+            }
         }
     }
 }
