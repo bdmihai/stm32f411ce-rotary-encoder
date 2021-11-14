@@ -93,6 +93,7 @@ void system_init()
 
     /* enable APB2 devices */
     SET_BIT(RCC->APB2ENR, RCC_APB2ENR_TIM10EN);
+    SET_BIT(RCC->APB2ENR, RCC_APB2ENR_SYSCFGEN);
 
     /* one us timer for delay */
     TIM10->PSC = (configCPU_CLOCK_HZ / 1000000) - 1;

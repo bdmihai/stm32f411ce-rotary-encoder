@@ -27,12 +27,18 @@
  
 #pragma once
 
+typedef struct gpio_event_t {
+    uint16_t gpio_idr;
+} gpio_event_t;
+
 /* initialization */
 void gpio_init();
 
 /* led control */
 void gpio_set_blue_led();
 void gpio_reset_blue_led();
+void gpio_toggle_blue_led();
+void gpio_handle_trigger();
 
 void gpio_config_control_out();
 void gpio_config_data_out();
@@ -43,5 +49,3 @@ void gpio_rs_high();
 void gpio_rs_low();
 void gpio_data_wr(const uint8_t data);
 uint8_t gpio_data_rd();
-
-

@@ -37,6 +37,7 @@ Product {
     Depends { name: "st7066u" }
     Depends { name: "startup" }
     Depends { name: "linker" }
+    Depends { name: "rencoder" }
 
     files: [
         "*.h",

@@ -1,6 +1,6 @@
 {
     "files.associations": {
-        "*.qbs": "qml",
+        "*qbs": "qbs",
         "stm32f1xx.h": "c",
         "task.h": "c",
         "stm32f1xx_hal.h": "c",
@@ -12,7 +12,9 @@
         "string_view": "c",
         "ranges": "c",
         "stm32f4xx.h": "c",
-        "cstdint": "cpp"
+        "cstdint": "cpp",
+        "i2c.h": "c",
+        "stm32f4xx_hal.h": "c"
     },
     "Open files list": false,
     "Toggle terminal": false,

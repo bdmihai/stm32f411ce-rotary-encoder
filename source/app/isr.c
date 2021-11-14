@@ -1,6 +1,6 @@
 /*_____________________________________________________________________________
  │                                                                            |
- │ COPYRIGHT (C) 2020 Mihai Baneu                                             |
+ │ COPYRIGHT (C) 2021 Mihai Baneu                                             |
  │                                                                            |
  | Permission is hereby  granted,  free of charge,  to any person obtaining a |
  | copy of this software and associated documentation files (the "Software"), |
@@ -21,28 +21,52 @@
  | THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                 |
  |____________________________________________________________________________|
  |                                                                            |
- |  Author: Mihai Baneu                           Last modified: 13.Dec.2020  |
+ |  Author: Mihai Baneu                           Last modified: 15.May.2020  |
  |                                                                            |
  |___________________________________________________________________________*/
- 
-import qbs
 
-Project {
-    name: "rotary-encoder"
-    minimumQbsVersion: "1.16"
-    qbsSearchPaths: "../qbs"
+#include "stm32f4xx.h"
+#include "isr.h"
 
-    references: [
-        "startup/startup.qbs",
-        "linker/linker.qbs",
-        "cmsis/cmsis.qbs",
-        "hal/hal.qbs",
-        "freertos/freertos.qbs",
-        "st7066u/st7066u.qbs",
-        "uprintf/uprintf.qbs",
-        "rencoder/rencoder.qbs",
-        "app/app.qbs"
-    ]
+void isr_init()
+{
+    /* mask the EXTI lines as interupts */
+    MODIFY_REG(EXTI->IMR, EXTI_IMR_MR0_Msk, EXTI_IMR_MR0);
+    MODIFY_REG(EXTI->IMR, EXTI_IMR_MR1_Msk, EXTI_IMR_MR1);
+    MODIFY_REG(EXTI->IMR, EXTI_IMR_MR2_Msk, EXTI_IMR_MR2);
+
+    /* set rising edge as trigger */
+    MODIFY_REG(EXTI->RTSR, EXTI_RTSR_TR0_Msk, EXTI_RTSR_TR0);
+    MODIFY_REG(EXTI->FTSR, EXTI_FTSR_TR0_Msk, EXTI_FTSR_TR0);
+    MODIFY_REG(EXTI->RTSR, EXTI_RTSR_TR1_Msk, EXTI_RTSR_TR1);
+    MODIFY_REG(EXTI->FTSR, EXTI_FTSR_TR1_Msk, EXTI_FTSR_TR1);
+    MODIFY_REG(EXTI->RTSR, EXTI_RTSR_TR2_Msk, EXTI_RTSR_TR2);
+    MODIFY_REG(EXTI->FTSR, EXTI_FTSR_TR2_Msk, EXTI_FTSR_TR2);
+
+    /* enable interupt */
+    NVIC_SetPriority(EXTI0_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 11 /* PreemptPriority */, 0 /* SubPriority */));
+    NVIC_SetPriority(EXTI1_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 11 /* PreemptPriority */, 0 /* SubPriority */));
+    NVIC_SetPriority(EXTI2_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 11 /* PreemptPriority */, 0 /* SubPriority */));
+
+    NVIC_EnableIRQ(EXTI0_IRQn);
+    NVIC_EnableIRQ(EXTI1_IRQn);
+    NVIC_EnableIRQ(EXTI2_IRQn);
 }
 
+void EXTI0_IRQHandler(void)
+{
+  gpio_handle_trigger();
+  SET_BIT(EXTI->PR, EXTI_PR_PR0_Msk);
+}
 
+void EXTI1_IRQHandler(void)
+{
+  gpio_handle_trigger();
+  SET_BIT(EXTI->PR, EXTI_PR_PR1_Msk);
+}
+
+void EXTI2_IRQHandler(void)
+{
+  //gpio_handle_trigger();
+  SET_BIT(EXTI->PR, EXTI_PR_PR2_Msk);
+}

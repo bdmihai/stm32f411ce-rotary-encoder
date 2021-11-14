@@ -1,6 +1,6 @@
 /*_____________________________________________________________________________
  │                                                                            |
- │ COPYRIGHT (C) 2020 Mihai Baneu                                             |
+ │ COPYRIGHT (C) 2021 Mihai Baneu                                             |
  │                                                                            |
  | Permission is hereby  granted,  free of charge,  to any person obtaining a |
  | copy of this software and associated documentation files (the "Software"), |
@@ -21,28 +21,10 @@
  | THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                 |
  |____________________________________________________________________________|
  |                                                                            |
- |  Author: Mihai Baneu                           Last modified: 13.Dec.2020  |
+ |  Author: Mihai Baneu                           Last modified: 12.Oct.2021  |
  |                                                                            |
  |___________________________________________________________________________*/
  
-import qbs
+#pragma once
 
-Project {
-    name: "rotary-encoder"
-    minimumQbsVersion: "1.16"
-    qbsSearchPaths: "../qbs"
-
-    references: [
-        "startup/startup.qbs",
-        "linker/linker.qbs",
-        "cmsis/cmsis.qbs",
-        "hal/hal.qbs",
-        "freertos/freertos.qbs",
-        "st7066u/st7066u.qbs",
-        "uprintf/uprintf.qbs",
-        "rencoder/rencoder.qbs",
-        "app/app.qbs"
-    ]
-}
-
-
+void isr_init();
