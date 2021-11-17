@@ -41,7 +41,7 @@ void isr_init()
     MODIFY_REG(EXTI->RTSR, EXTI_RTSR_TR1_Msk,  EXTI_RTSR_TR1);
     MODIFY_REG(EXTI->FTSR, EXTI_FTSR_TR1_Msk,  EXTI_FTSR_TR1);
     MODIFY_REG(EXTI->RTSR, EXTI_RTSR_TR10_Msk, EXTI_RTSR_TR10);
-    //MODIFY_REG(EXTI->FTSR, EXTI_FTSR_TR10_Msk, EXTI_FTSR_TR10);
+    MODIFY_REG(EXTI->FTSR, EXTI_FTSR_TR10_Msk, EXTI_FTSR_TR10);
 
     /* enable interupt */
     NVIC_SetPriority(EXTI0_IRQn,     NVIC_EncodePriority(NVIC_GetPriorityGrouping(), 11 /* PreemptPriority */, 0 /* SubPriority */));
